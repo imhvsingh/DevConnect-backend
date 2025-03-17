@@ -1,34 +1,28 @@
 const express = require("express");
-
+const connectDB = require("./config/database");
 const app = express();
+const User = require("./models/user");
 
-//app.use("/route", rH, [rH2, rH3], rH4, rH5);
-app.get("/user", (req, res, next) => {
-        console.log("Handling the route user!");
-        next();
-    },
+app.post("/signup", async(req, res) => {
+    // creating a new instance of the User model
+    const user = new User({
+        firstName: "Virat",
+        lastName: "kohli",
+        emailId: "viratkohli@gmail.com",
+        password: "virat@123"
+    });
 
-    (req, res, next) => {
-        console.log("Handling the route user 2!");
-        next();
-    },
+    await user.save();
+    res.send("User added successfully");
 
-    (req, res, next) => {
-        console.log("Handling the route user 3!");
-        next();
-    },
-
-    (req, res, next) => {
-        console.log("Handling the route user 4!");
-        next();
-    },
-
-    (req, res, next) => {
-        console.log("Handling the route user 5!");
-        res.send("5th Response!!");
-    }
-);
-
-app.listen(7777, () => {
-    console.log("Server is running on port 7777...");
 });
+
+connectDB().then(() => {
+        console.log("Connected to the database...");
+        app.listen(7777, () => {
+            console.log("Server is running on port 7777...");
+        });
+    })
+    .catch((err) => {
+        console.log("Error connecting to the database...");
+    });
