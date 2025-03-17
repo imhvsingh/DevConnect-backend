@@ -2,25 +2,32 @@ const express = require("express");
 
 const app = express();
 
-//This will only match the GET HTTP method API calls to /user
-app.get("/user", (req, res) => {
-    res.send({ firstName: "Harsh", lastName: "singh" });
-});
+//app.use("/route", rH, [rH2, rH3], rH4, rH5);
+app.get("/user", (req, res, next) => {
+        console.log("Handling the route user!");
+        next();
+    },
 
-app.post("/user", (req, res) => {
-    //Save user data to the database
-    res.send("User data saved successfully!");
-});
+    (req, res, next) => {
+        console.log("Handling the route user 2!");
+        next();
+    },
 
-app.delete("/user", (req, res) => {
-    //Delete user data from the database
-    res.send("User data deleted successfully!");
-});
+    (req, res, next) => {
+        console.log("Handling the route user 3!");
+        next();
+    },
 
-//This will match all the HTTP method API calls to /test
-app.use("/test", (req, res) => {
-    res.send("namaste from the server!");
-});
+    (req, res, next) => {
+        console.log("Handling the route user 4!");
+        next();
+    },
+
+    (req, res, next) => {
+        console.log("Handling the route user 5!");
+        res.send("5th Response!!");
+    }
+);
 
 app.listen(7777, () => {
     console.log("Server is running on port 7777...");
