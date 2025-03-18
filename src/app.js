@@ -1,21 +1,26 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
-const User = require("./models/user");
+const cookieParser = require("cookie-parser");
 
-app.post("/signup", async(req, res) => {
-    // creating a new instance of the User model
-    const user = new User({
-        firstName: "Virat",
-        lastName: "kohli",
-        emailId: "viratkohli@gmail.com",
-        password: "virat@123"
-    });
 
-    await user.save();
-    res.send("User added successfully");
+app.use(express.json());
+app.use(cookieParser());
 
-});
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
+const userRouter = require("./routes/user");
+const paymentRouter = require("./routes/payment");
+const initializeSocket = require("./utils/socket");
+const chatRouter = require("./routes/chat");
+
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
+app.use("/", paymentRouter);
+app.use("/", chatRouter);
 
 connectDB().then(() => {
         console.log("Connected to the database...");
