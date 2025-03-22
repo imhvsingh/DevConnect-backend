@@ -1,30 +1,30 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+
 const userAuth = async(req, res, next) => {
 
     try {
 
         const { token } = req.cookies;
         if (!token) {
-            throw new Error("token is invalid....");
+            return res.status(401).send("Please login");
         }
 
         const decodedMessage = jwt.verify(token, "DEVTinder@1234hds");
 
         const { _id } = decodedMessage;
+        console.log("Logged in user is: " + _id);
         const user = await User.findById(_id);
-        req.user = user;
-
         if (!user) {
-            throw new Error("user does't exist");
-        } else {
-            next();
+            throw new Error("User does not exist");
         }
-    } catch (err) {
-        res.status(400).send("ERROR: " + err.message);
+        req.user = user;
+        next();
+    } catch (error) {
+        res.status(400).send("Error retrieving user profile: " + error.message);
     }
 };
 
 module.exports = {
-    userAuth,
-};
+    userAuth
+}

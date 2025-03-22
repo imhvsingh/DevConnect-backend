@@ -40,11 +40,12 @@ requestRouter.post(
                     .send({ message: "Connection Request Already Exists!!" });
             }
 
-            const connectionRequest = new ConnectionRequest({
+            const connection = new ConnectionRequest({
                 fromUserId,
                 toUserId,
                 status,
             });
+            const data = await connection.save();
 
 
             res.json({
